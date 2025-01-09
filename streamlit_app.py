@@ -26,6 +26,7 @@ winners.name = "Win Prob."
 starting_stats = starting_stats.join(other=winners)
 
 # layout
+st.set_page_config(page_title="Top Scorer")
 st.title("England Test Top Scorer 2025")
 st.write("An app to keep track of a Cricket Cwappers bet.")
 st.data_editor(
