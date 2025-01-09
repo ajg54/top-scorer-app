@@ -1,8 +1,8 @@
-# 🎈 Blank app template
+# Top Scorer App
 
-A simple Streamlit app template for you to modify!
+A simple Streamlit app to track the top scoring England Test batters.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://top-scorer-2025.streamlit.app/)
 
 ### How to run it on your own machine
 
