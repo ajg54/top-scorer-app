@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import requests
+import os
 
 # parameters
 agent = {"User-Agent": "Mozilla/5.0"}
@@ -18,6 +19,10 @@ choices['player_id'] = choices['cricinfo_path'].str.split("-").str[-1]
 choices['cricinfo_path'] = profile_path + choices['cricinfo_path']
 starting_stats = pd.read_csv("./data/starting_player_stats.csv")
 starting_stats.set_index('player', drop=True, inplace=True)
+historical_top_scorers = {}
+for file_name in os.listdir("./data/historical"):
+    temp_year = file_name[12:-4]
+    historical_top_scorers[temp_year] = pd.read_csv(os.path.join("./data/historical", file_name))
 # load remote data
 player_history = {}
 for player_name in choices['player']:
@@ -65,3 +70,11 @@ for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
         st.write(url)
         past_matches = player_history[player_name]
         st.dataframe(past_matches[['Runs', 'Opposition', 'Ground', 'Start Date']], hide_index=True)
+selected_historical_year = st.selectbox(
+    "Historical England top scorers:",
+    historical_top_scorers.keys(),
+    index=None,
+    placeholder="Select year."
+)
+if selected_historical_year is not None:
+    st.write(historical_top_scorers[selected_historical_year])
