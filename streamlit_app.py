@@ -21,7 +21,7 @@ starting_stats = pd.read_csv("./data/starting_player_stats.csv")
 starting_stats.set_index('player', drop=True, inplace=True)
 historical_top_scorers = {}
 for file_name in os.listdir("./data/historical"):
-    temp_year = file_name[12:-4]
+    temp_year = int(file_name[12:-4])
     historical_top_scorers[temp_year] = pd.read_csv(os.path.join("./data/historical", file_name))
 # load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
@@ -74,9 +74,11 @@ for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
         st.write(url)
         past_matches = player_history[player_name]
         st.dataframe(past_matches[['Runs', 'Opposition', 'Ground', 'Start Date']], hide_index=True)
+historical_years = list(historical_top_scorers.keys())
+historical_years.sort(reverse=True)
 selected_historical_year = st.selectbox(
     "Historical England top scorers:",
-    list(historical_top_scorers.keys())[::-1],
+    historical_years,
     index=None,
     placeholder="Select year."
 )
