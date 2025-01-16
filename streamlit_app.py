@@ -23,13 +23,17 @@ historical_top_scorers = {}
 for file_name in os.listdir("./data/historical"):
     temp_year = file_name[12:-4]
     historical_top_scorers[temp_year] = pd.read_csv(os.path.join("./data/historical", file_name))
-# load remote data
+# load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
 for player_name in choices['player']:
-    player_id = choices[choices['player'] == player_name]['player_id'].iloc[0]
-    url = stats_url_prefix + str(player_id) + recent_matches_suffix
-    player_history[player_name] = past_matches = pd.read_html(requests.get(url, headers=agent).text)[3]
-# initial calculations
+    if player_name not in st.session_state:
+        player_id = choices[choices['player'] == player_name]['player_id'].iloc[0]
+        url = stats_url_prefix + str(player_id) + recent_matches_suffix
+        player_history[player_name] = past_matches = pd.read_html(requests.get(url, headers=agent).text)[3]
+        st.session_state[player_name] = player_history[player_name]
+    else:
+        player_history[player_name] = st.session_state[player_name]
+    # initial calculations
 starting_stats['runs_per_match'] = starting_stats['runs'] / starting_stats['matches']
 starting_stats['initial_expected_runs'] = starting_stats['runs_per_match'] * total_tests
 random_samples = pd.DataFrame()
