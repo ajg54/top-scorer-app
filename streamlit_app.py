@@ -76,7 +76,7 @@ for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
         st.dataframe(past_matches[['Runs', 'Opposition', 'Ground', 'Start Date']], hide_index=True)
 selected_historical_year = st.selectbox(
     "Historical England top scorers:",
-    historical_top_scorers.keys(),
+    list(historical_top_scorers.keys())[::-1],
     index=None,
     placeholder="Select year."
 )
