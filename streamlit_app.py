@@ -62,6 +62,8 @@ st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
 )
+st.write("Current Performance: to be added")
+st.write("Initial Probabilities")
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
                                           'Win Prob.': "{:.2%}",
