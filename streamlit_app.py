@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import requests
 import os
+from io import StringIO
 
 # parameters
 agent = {"User-Agent": "Mozilla/5.0"}
@@ -29,7 +30,7 @@ for player_name in choices['player']:
     if player_name not in st.session_state:
         player_id = choices[choices['player'] == player_name]['player_id'].iloc[0]
         url = stats_url_prefix + str(player_id) + recent_matches_suffix
-        player_history[player_name] = past_matches = pd.read_html(requests.get(url, headers=agent).text)[3]
+        player_history[player_name] = past_matches = pd.read_html(StringIO(requests.get(url, headers=agent).text))[3]
         st.session_state[player_name] = player_history[player_name]
     else:
         player_history[player_name] = st.session_state[player_name]
