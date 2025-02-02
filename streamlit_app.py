@@ -4,6 +4,8 @@ import numpy as np
 import requests
 import os
 from io import StringIO
+import datetime
+from scripts.data_downloader import get_top_scorer_table
 
 # parameters
 agent = {"User-Agent": "Mozilla/5.0"}
@@ -62,7 +64,15 @@ st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
 )
-st.write("Current Performance: to be added")
+st.write("Current Performance")
+reference_date = st.date_input("Select reference date "
+                               "[gives run total for matches starting that year up to and including selected date]",
+                               "today", max_value="today", format="DD/MM/YYYY")
+current_table = get_top_scorer_table(datetime.date(reference_date.year,1,1), reference_date)
+if current_table.empty:
+    st.write("No data yet for selected time period")
+else:
+    st.write(current_table)
 st.write("Initial Probabilities")
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
