@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import requests
 import os
+from io import StringIO
+import datetime
+from scripts.data_downloader import get_top_scorer_table
 
 # parameters
 agent = {"User-Agent": "Mozilla/5.0"}
@@ -29,7 +32,7 @@ for player_name in choices['player']:
     if player_name not in st.session_state:
         player_id = choices[choices['player'] == player_name]['player_id'].iloc[0]
         url = stats_url_prefix + str(player_id) + recent_matches_suffix
-        player_history[player_name] = past_matches = pd.read_html(requests.get(url, headers=agent).text)[3]
+        player_history[player_name] = past_matches = pd.read_html(StringIO(requests.get(url, headers=agent).text))[3]
         st.session_state[player_name] = player_history[player_name]
     else:
         player_history[player_name] = st.session_state[player_name]
@@ -61,11 +64,21 @@ st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
 )
+st.header("Current Performance")
+reference_date = st.date_input("Select reference date "
+                               "[gives run total for matches starting that year up to and including selected date]",
+                               "today", max_value="today", format="DD/MM/YYYY")
+current_table = get_top_scorer_table(datetime.date(reference_date.year,1,1), reference_date)
+if current_table.empty:
+    st.write("No data yet for selected time period")
+else:
+    st.write(current_table)
+st.header("Initial Probabilities")
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
                                           'Win Prob.': "{:.2%}",
                                           'Form Prob.': "{:.2%}"}))
-st.write("Recent form:")
+st.header("Recent form")
 player_tabs = st.tabs(list(starting_stats.index))
 for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
     with player_tab:
@@ -74,6 +87,7 @@ for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
         st.write(url)
         past_matches = player_history[player_name]
         st.dataframe(past_matches[['Runs', 'Opposition', 'Ground', 'Start Date']], hide_index=True)
+st.header("Historical Results")
 historical_years = list(historical_top_scorers.keys())
 historical_years.sort(reverse=True)
 selected_historical_year = st.selectbox(
