@@ -64,7 +64,7 @@ st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
 )
-st.write("Current Performance")
+st.header("Current Performance")
 reference_date = st.date_input("Select reference date "
                                "[gives run total for matches starting that year up to and including selected date]",
                                "today", max_value="today", format="DD/MM/YYYY")
@@ -73,12 +73,12 @@ if current_table.empty:
     st.write("No data yet for selected time period")
 else:
     st.write(current_table)
-st.write("Initial Probabilities")
+st.header("Initial Probabilities")
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
                                           'Win Prob.': "{:.2%}",
                                           'Form Prob.': "{:.2%}"}))
-st.write("Recent form:")
+st.header("Recent form")
 player_tabs = st.tabs(list(starting_stats.index))
 for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
     with player_tab:
@@ -87,6 +87,7 @@ for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
         st.write(url)
         past_matches = player_history[player_name]
         st.dataframe(past_matches[['Runs', 'Opposition', 'Ground', 'Start Date']], hide_index=True)
+st.header("Historical Results")
 historical_years = list(historical_top_scorers.keys())
 historical_years.sort(reverse=True)
 selected_historical_year = st.selectbox(
