@@ -56,6 +56,16 @@ random_samples['winner'] = random_samples.idxmax(axis=1)
 winners = random_samples.groupby('winner').size()/sample_size
 winners.name = "Form Prob."
 starting_stats = starting_stats.join(other=winners)
+current_date = datetime.date.today()
+start_date = datetime.date(2025, 1,1)
+end_date = min(current_date, datetime.date(2025,12,31))
+current_scores = get_top_scorer_table(start_date, end_date)
+if not current_scores.empty:
+    choices = choices.join(current_scores[['Runs']], on='player', how='left')
+    choices.rename(columns={'Runs': 'runs'}, inplace=True)
+    choices.sort_values(by='runs', inplace=True, ascending=False)
+    choices['ranking'] = choices.reset_index().index + 1
+    choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
 # layout
 st.set_page_config(page_title="Top Scorer")
 st.title("England Test Top Scorer 2025")
