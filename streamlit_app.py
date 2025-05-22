@@ -32,7 +32,13 @@ for player_name in choices['player']:
     if player_name not in st.session_state:
         player_id = choices[choices['player'] == player_name]['player_id'].iloc[0]
         url = stats_url_prefix + str(player_id) + recent_matches_suffix
-        player_history[player_name] = past_matches = pd.read_html(StringIO(requests.get(url, headers=agent).text))[3]
+        past_matches = pd.read_html(StringIO(requests.get(url, headers=agent).text))[3]
+        # TODO: have a more robust fix for this issue (also to separate form from current)
+        if (past_matches['Bat1'].iloc[0]=='TDNB') or (past_matches['Bat1'].iloc[0]=='DNB'):
+            past_matches = past_matches.iloc[1:]
+            past_matches['Runs'] = past_matches['Runs'].astype(int)
+        print(past_matches.head())
+        player_history[player_name] = past_matches
         st.session_state[player_name] = player_history[player_name]
     else:
         player_history[player_name] = st.session_state[player_name]
