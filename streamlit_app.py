@@ -68,6 +68,7 @@ current_scores = get_top_scorer_table(start_date, end_date)
 if not current_scores.empty:
     choices = choices.join(current_scores[['Runs']], on='player', how='left')
     choices.rename(columns={'Runs': 'runs'}, inplace=True)
+    choices['runs'] = choices['runs'].astype(int)
     choices.sort_values(by='runs', inplace=True, ascending=False)
     choices['ranking'] = choices.reset_index().index + 1
     choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
