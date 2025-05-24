@@ -37,7 +37,6 @@ for player_name in choices['player']:
         if (past_matches['Bat1'].iloc[0]=='TDNB') or (past_matches['Bat1'].iloc[0]=='DNB'):
             past_matches = past_matches.iloc[1:]
             past_matches['Runs'] = past_matches['Runs'].astype(int)
-        print(past_matches.head())
         player_history[player_name] = past_matches
         st.session_state[player_name] = player_history[player_name]
     else:
