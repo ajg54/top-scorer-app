@@ -44,7 +44,7 @@ for player_name in choices['player']:
         st.session_state[player_name] = player_history[player_name]
     else:
         player_history[player_name] = st.session_state[player_name]
-    # initial calculations
+# initial calculations
 starting_stats['runs_per_match'] = starting_stats['runs'] / starting_stats['matches']
 starting_stats['initial_expected_runs'] = starting_stats['runs_per_match'] * total_tests
 random_samples = pd.DataFrame()
@@ -93,11 +93,15 @@ if current_table.empty:
 else:
     st.write(current_table)
 st.header("Initial Probabilities")
+st.write("Career run tallies taken prior to the start of 2025, whereas form updates dynamically."
+         " Neither probability factors in the current run tally for 2025.")
+# TODO: make form here static and create a separate 'Ongoing Probabilities' section
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
                                           'Win Prob.': "{:.2%}",
                                           'Form Prob.': "{:.2%}"}))
 st.header("Recent form")
+st.write("(includes any ongoing matches, so first run tally might be for a partial rather than full match)")
 player_tabs = st.tabs(list(starting_stats.index))
 for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
     with player_tab:
