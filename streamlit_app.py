@@ -25,7 +25,10 @@ starting_stats.set_index('player', drop=True, inplace=True)
 historical_top_scorers = {}
 for file_name in os.listdir("./data/historical"):
     temp_year = int(file_name[12:-4])
-    historical_top_scorers[temp_year] = pd.read_csv(os.path.join("./data/historical", file_name))
+    temp_top_scorers = pd.read_csv(os.path.join("./data/historical", file_name))
+    temp_top_scorers.index = temp_top_scorers.index + 1
+    temp_top_scorers.index.name = "Ranking"
+    historical_top_scorers[temp_year] = temp_top_scorers
 # load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
 for player_name in choices['player']:
