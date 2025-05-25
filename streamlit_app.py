@@ -25,7 +25,10 @@ starting_stats.set_index('player', drop=True, inplace=True)
 historical_top_scorers = {}
 for file_name in os.listdir("./data/historical"):
     temp_year = int(file_name[12:-4])
-    historical_top_scorers[temp_year] = pd.read_csv(os.path.join("./data/historical", file_name))
+    temp_top_scorers = pd.read_csv(os.path.join("./data/historical", file_name))
+    temp_top_scorers.index = temp_top_scorers.index + 1
+    temp_top_scorers.index.name = "Ranking"
+    historical_top_scorers[temp_year] = temp_top_scorers
 # load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
 for player_name in choices['player']:
@@ -37,12 +40,11 @@ for player_name in choices['player']:
         if (past_matches['Bat1'].iloc[0]=='TDNB') or (past_matches['Bat1'].iloc[0]=='DNB'):
             past_matches = past_matches.iloc[1:]
             past_matches['Runs'] = past_matches['Runs'].astype(int)
-        print(past_matches.head())
         player_history[player_name] = past_matches
         st.session_state[player_name] = player_history[player_name]
     else:
         player_history[player_name] = st.session_state[player_name]
-    # initial calculations
+# initial calculations
 starting_stats['runs_per_match'] = starting_stats['runs'] / starting_stats['matches']
 starting_stats['initial_expected_runs'] = starting_stats['runs_per_match'] * total_tests
 random_samples = pd.DataFrame()
@@ -69,6 +71,7 @@ current_scores = get_top_scorer_table(start_date, end_date)
 if not current_scores.empty:
     choices = choices.join(current_scores[['Runs']], on='player', how='left')
     choices.rename(columns={'Runs': 'runs'}, inplace=True)
+    choices['runs'] = choices['runs'].astype(int)
     choices.sort_values(by='runs', inplace=True, ascending=False)
     choices['ranking'] = choices.reset_index().index + 1
     choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
@@ -90,11 +93,15 @@ if current_table.empty:
 else:
     st.write(current_table)
 st.header("Initial Probabilities")
+st.write("Career run tallies taken prior to the start of 2025, whereas form updates dynamically."
+         " Neither probability factors in the current run tally for 2025.")
+# TODO: make form here static and create a separate 'Ongoing Probabilities' section
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
                                           'Win Prob.': "{:.2%}",
                                           'Form Prob.': "{:.2%}"}))
 st.header("Recent form")
+st.write("(includes any ongoing matches, so first run tally might be for a partial rather than full match)")
 player_tabs = st.tabs(list(starting_stats.index))
 for player_tab, player_name in zip(player_tabs, list(starting_stats.index)):
     with player_tab:
