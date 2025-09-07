@@ -17,12 +17,18 @@ raw_county_table = runs_by_player.join(player_by_county.set_index("Player"), how
 raw_county_table['County'] = raw_county_table['County'].fillna("Unassigned")
 # aggregate runs by country
 agg_county_table = raw_county_table.groupby("County").agg({'Runs': 'sum', 'Inns': 'sum'})
-# TODO: add in Scotland if missing
 # sort by runs total
 agg_county_table.sort_values(by='Runs', inplace=True, ascending=False) # TODO: include more stats
+# add in Scotland
+short_county_table = agg_county_table.copy()
+short_county_list = ["Yorkshire", "Surrey", "Scotland"]
+for county in short_county_list:
+    if county not in short_county_table.index:
+        short_county_table.loc[county] = [0, 0]
+short_county_table = short_county_table.loc[short_county_list]
 
 st.title("Constructors' Championship")
 st.header("Overview")
-st.write("To be added.")
+st.write(short_county_table)
 st.header("By County")
 st.write(agg_county_table)
