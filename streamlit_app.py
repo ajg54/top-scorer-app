@@ -4,6 +4,7 @@ import os
 pages_dir = "subpages"
 pg = st.navigation(
     [st.Page(os.path.join(pages_dir, "main.py"), title="Homepage", icon=":material/house:"),
+     st.Page(os.path.join(pages_dir, "runners.py"), title="Runners and Riders", icon=":material/sports_score:"),
      st.Page(os.path.join(pages_dir, "constructors.py"), title="Constructors' Championship",
              icon=":material/sports_motorsports:"),
      st.Page(os.path.join(pages_dir, "history.py"), title="History", icon=":material/history:")])
