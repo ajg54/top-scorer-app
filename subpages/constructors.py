@@ -21,14 +21,22 @@ agg_county_table = raw_county_table.groupby("County").agg({'Runs': 'sum', 'Inns'
 agg_county_table.sort_values(by='Runs', inplace=True, ascending=False) # TODO: include more stats
 # add in Scotland
 short_county_table = agg_county_table.copy()
-short_county_list = ["Yorkshire", "Surrey", "Scotland"]
-for county in short_county_list:
-    if county not in short_county_table.index:
-        short_county_table.loc[county] = [0, 0]
-short_county_table = short_county_table.loc[short_county_list]
+short_county_table['Logo'] = ""
+region_selection = {
+    "Yorkshire": "https://img1.hscicdn.com/image/upload/f_auto/lsci/db/PICTURES/CMS/313200/313281.logo.png",
+    "Surrey": "https://d2dzjyo4yc2sta.cloudfront.net/?url=images.pitchero.com%2Fclub_logos%2F13643%2FpX7KF1tRo6HgpepV0Evn_Logo.png&bg=fff&w=1200&h=630&t=frame",
+    "Scotland": "https://static.cricketaddictor.com/images/team/logo/scotland-cricket.jpg?_t=1714384820?q=80"}
+for region in region_selection.keys():
+    if region not in short_county_table.index:
+        short_county_table.loc[region] = [0, 0, ""]
+    short_county_table.loc[region, 'Logo'] = region_selection[region]
+short_county_table = short_county_table.loc[region_selection.keys()]
+short_county_table.reset_index(inplace=True)
+short_county_table = short_county_table[['Logo', 'County', 'Runs']]
+short_county_table.rename(columns={"County": "'County'"}, inplace=True)
 
 st.title("Constructors' Championship")
 st.header("Overview")
-st.write(short_county_table)
+st.data_editor(short_county_table, column_config={"Logo": st.column_config.ImageColumn()}, hide_index=True)
 st.header("By County")
 st.write(agg_county_table)
