@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import requests
-import os
 from io import StringIO
 import datetime
 from scripts.data_downloader import get_top_scorer_table
@@ -69,7 +68,6 @@ if not current_scores.empty:
     choices['ranking'] = choices.reset_index().index + 1
     choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
 # layout
-st.set_page_config(page_title="Top Scorer")
 st.title("England Test Top Scorer 2025")
 st.write("An app to keep track of a Cricket Cwappers bet.")
 st.data_editor(
