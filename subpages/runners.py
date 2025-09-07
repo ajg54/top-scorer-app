@@ -2,8 +2,8 @@ import streamlit as st
 
 st.title("Runners and Riders")
 st.header("Runners")
-runners_list = ["Root", "Brook", "Pope", "Crawley", "Smith"]
-tab_root, tab_brook, tab_pope, tab_crawley, tab_smith = st.tabs(runners_list)
+runners_list = ["Root", "Brook", "Pope", "Crawley", "Smith", "Duckett", "Stokes", "Bethell"]
+tab_root, tab_brook, tab_pope, tab_crawley, tab_smith, tab_duckett, tab_stokes, tab_bethell = st.tabs(runners_list)
 with tab_root:
     st.header("Joe Root")
     st.write("Selected first by Paul.")
@@ -43,6 +43,22 @@ with tab_smith:
              "after England resolved the Foakes/Bairstow dilemma by answering 'neither'."
              " Will he be able to maintain his form "
              "and is he batting too low in the order to top the run scoring charts?")
+with tab_duckett:
+    st.header("Ben Duckett")
+    st.write("Not selected.")
+    st.write("A controversial non-selection given his remarkable second coming as an opener for England.")
+with tab_stokes:
+    st.header("Ben Stokes")
+    st.write("Not selected.")
+    st.write("Despite being the only player to knock Root off his calendar year top scorer perch in the last ten years,"
+             " Stokes productivity with the bat has been rather limited since taking over the captaincy.")
+with tab_bethell:
+    st.header("Jacob Bethell")
+    st.write("Not selected.")
+    st.write("After a surprise Test debut in New Zealand at the back-end of 2024, "
+             "there was genuine debate in the media about who to drop to accommodate him in England's top seven."
+             " However, with IPL commitments making him unavailable for the first Test of the year, "
+             "it seemed likely that he'd have to wait for his chance.")
 
 st.header("Riders")
 tab_paul, tab_duncan, tab_matt, tab_alexis, tab_matt_snr = st.tabs(["Paul", "Duncan", "Matt", "Alexis", "Matt Snr."])
