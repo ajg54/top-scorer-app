@@ -10,7 +10,7 @@ for file_name in os.listdir("./data/historical"):
     temp_top_scorers.index.name = "Ranking"
     historical_top_scorers[temp_year] = temp_top_scorers
 
-st.header("History")
+st.title("History")
 st.header("Historical Results")
 historical_years = list(historical_top_scorers.keys())
 historical_years.sort(reverse=True)
