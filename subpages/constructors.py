@@ -5,6 +5,8 @@ from scripts.data_downloader import get_top_scorer_table
 
 # load runs overview
 reference_date = datetime.date.today()
+if reference_date.year != st.session_state.base_year:
+    reference_date = st.session_state.base_date
 runs_by_player = get_top_scorer_table(datetime.date(reference_date.year,1,1), reference_date)
 runs_by_player.replace(to_replace="-", value=0, inplace=True)
 # TODO: investigate Arrow serialization log message on type conversions
