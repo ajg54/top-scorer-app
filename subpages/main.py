@@ -64,9 +64,16 @@ if not current_scores.empty:
     choices.sort_values(by='runs', inplace=True, ascending=False)
     choices['ranking'] = choices.reset_index().index + 1
     choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
+next_year_url = "https://top-scorer-" + str(st.session_state.base_year+1) +".streamlit.app"
 # layout
 st.title("England Test Top Scorer " + str(st.session_state.base_year))
 st.write("An app to keep track of a Cricket Cwappers bet.")
+st.write("This competition has now concluded."
+         " The competition for the following year might be available at " + next_year_url + "."
+         " Congratulations to <b>Paul</b> for his Nostradamus like ability to somehow realise that Joe Root might score a lot of runs."
+         " Also congrats to <b>Yorkshire</b> for contributing the most runs, showing Surrey that quality beats quantity."
+         " See the detailed results below.",
+         unsafe_allow_html=True)
 st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
