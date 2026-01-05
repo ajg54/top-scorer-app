@@ -19,7 +19,7 @@ choices = pd.read_csv("./data/choices.csv")
 choices.set_index('person', drop=True, inplace=True)
 choices['player_id'] = choices['cricinfo_path'].str.split("-").str[-1]
 choices['cricinfo_path'] = profile_path + choices['cricinfo_path']
-starting_stats = pd.read_csv("./data/starting_player_stats.csv")
+starting_stats = pd.read_csv("./data/starting_player_stats_2025.csv")
 starting_stats.set_index('player', drop=True, inplace=True)
 # load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
