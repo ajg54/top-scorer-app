@@ -84,8 +84,8 @@ if current_table.empty:
 else:
     st.write(current_table)
 st.header("Initial Probabilities")
-st.write("Career run tallies taken prior to the start of 2025, whereas form updates dynamically."
-         " Neither probability factors in the current run tally for 2025.")
+st.write("Career run tallies taken prior to the start of the year, whereas form updates dynamically."
+         " Neither probability factors in the current year run tally.")
 # TODO: make form here static and create a separate 'Ongoing Probabilities' section
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
