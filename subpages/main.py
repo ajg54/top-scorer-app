@@ -19,7 +19,7 @@ choices = pd.read_csv("./data/choices.csv")
 choices.set_index('person', drop=True, inplace=True)
 choices['player_id'] = choices['cricinfo_path'].str.split("-").str[-1]
 choices['cricinfo_path'] = profile_path + choices['cricinfo_path']
-starting_stats = pd.read_csv("./data/starting_player_stats.csv")
+starting_stats = pd.read_csv("./data/starting_player_stats_" + str(st.session_state.base_year) + ".csv")
 starting_stats.set_index('player', drop=True, inplace=True)
 # load remote data, we use session state to avoid reloading this from source each time
 player_history = {}
@@ -56,10 +56,7 @@ random_samples['winner'] = random_samples.idxmax(axis=1)
 winners = random_samples.groupby('winner').size()/sample_size
 winners.name = "Form Prob."
 starting_stats = starting_stats.join(other=winners)
-current_date = datetime.date.today()
-start_date = datetime.date(2025, 1,1)
-end_date = min(current_date, datetime.date(2025,12,31))
-current_scores = get_top_scorer_table(start_date, end_date)
+current_scores = get_top_scorer_table(datetime.date(st.session_state.base_year, 1,1), st.session_state.base_date)
 if not current_scores.empty:
     choices = choices.join(current_scores[['Runs']], on='player', how='left')
     choices.rename(columns={'Runs': 'runs'}, inplace=True)
@@ -67,9 +64,16 @@ if not current_scores.empty:
     choices.sort_values(by='runs', inplace=True, ascending=False)
     choices['ranking'] = choices.reset_index().index + 1
     choices = choices[['player', 'runs', 'ranking', 'selection_order', 'cricinfo_path', 'player_id']]
+next_year_url = "https://top-scorer-" + str(st.session_state.base_year+1) +".streamlit.app"
 # layout
-st.title("England Test Top Scorer 2025")
+st.title("England Test Top Scorer " + str(st.session_state.base_year))
 st.write("An app to keep track of a Cricket Cwappers bet.")
+st.write("This competition has now concluded."
+         " The competition for the following year might be available at " + next_year_url + "."
+         " Congratulations to <b>Paul</b> for his Nostradamus like ability to somehow realise that Joe Root might score a lot of runs."
+         " Also congrats to <b>Yorkshire</b> for contributing the most runs, showing Surrey that quality beats quantity."
+         " See the detailed results below.",
+         unsafe_allow_html=True)
 st.data_editor(
     choices,
     column_config={'cricinfo_path': st.column_config.LinkColumn()}
@@ -77,15 +81,16 @@ st.data_editor(
 st.header("Current Performance")
 reference_date = st.date_input("Select reference date "
                                "[gives run total for matches starting that year up to and including selected date]",
-                               "today", max_value="today", format="DD/MM/YYYY")
+                               st.session_state['base_date'], max_value=st.session_state['base_date'],
+                               format="DD/MM/YYYY")
 current_table = get_top_scorer_table(datetime.date(reference_date.year,1,1), reference_date)
 if current_table.empty:
     st.write("No data yet for selected time period")
 else:
     st.write(current_table)
 st.header("Initial Probabilities")
-st.write("Career run tallies taken prior to the start of 2025, whereas form updates dynamically."
-         " Neither probability factors in the current run tally for 2025.")
+st.write("Career run tallies taken prior to the start of the year, whereas form updates dynamically."
+         " Neither probability factors in the current year run tally.")
 # TODO: make form here static and create a separate 'Ongoing Probabilities' section
 st.dataframe(starting_stats.style.format({'runs_per_match': "{:.2f}",
                                           'initial_expected_runs': "{:.0f}",
