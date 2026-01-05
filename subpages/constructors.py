@@ -31,7 +31,7 @@ short_county_table['Logo'] = ""
 region_selection = {
     "Yorkshire": "https://img1.hscicdn.com/image/upload/f_auto/lsci/db/PICTURES/CMS/313200/313281.logo.png",
     "Surrey": "https://d2dzjyo4yc2sta.cloudfront.net/?url=images.pitchero.com%2Fclub_logos%2F13643%2FpX7KF1tRo6HgpepV0Evn_Logo.png&bg=fff&w=1200&h=630&t=frame",
-    "Scotland": "https://static.cricketaddictor.com/images/team/logo/scotland-cricket.jpg?_t=1714384820?q=80"}
+    "Scotland": "https://www.sportsyaari.com/images/team/logo/scotland-team-logo.png"}
 for region in region_selection.keys():
     if region not in short_county_table.index:
         short_county_table.loc[region] = [0, None, 0, 0, 0, "", ""]
